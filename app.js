@@ -10,11 +10,40 @@ let intentos = 0;
 let listaNumeroSorteado = [];
 let numeroMaximo = 10;
 
-console.log("numero secreto: " + numeroSecreto);
+//console.log("numero secreto: " + numeroSecreto);
 function asignarTextoElemento(elemento, texto){
     let elementoHTML = document.querySelector(elemento);
     elementoHTML.innerHTML = texto;
     return;
+}
+
+function condicionesIniciales(numeroMaximo){
+    asignarTextoElemento('h1', 'Juego del numero secreto!.');
+    asignarTextoElemento('p', `Indica un numero del 1 al ${numeroMaximo}.`);
+    numeroSecreto = generarNumeroSecreto(numeroMaximo);
+    intentos = 1;
+    return;
+}
+
+function generarNumeroSecreto(numMax){
+    let numeroGenerado = Math.floor(Math.random() * numMax ) + 1;
+    //console.log(numeroGenerado);
+    //console.log(listaNumeroSorteado);
+    //Verificar si ya sorteamos todos los numeros
+    if (listaNumeroSorteado.length == numeroMaximo){
+        asignarTextoElemento('p', 'Ya se sortearon todos los numeros posibles.');
+    } else {
+        //Si el numero generado esta incluido en la lista 
+        if (listaNumeroSorteado.includes(numeroGenerado)){
+           return generarNumeroSecreto(numMax);//la utilizacion de una funcion dentro de si misma se llama recursividad, esto lo que hace es ejecutar la misma funcion hasta cumplir una condicion especifica en este caso es repetir la generacion de numero hasta que no este en la lista, la idea de esto es reutilizar la funcion ya realizada para no limitar la necesidad
+            //en la solucion solo llamando a la funcion con recursividad se genera un bucle infinito el cual se debe arreglar
+            //se puede manejar de diferentes maneras, 1. se puede poner un numero de intentos fijo, 2. se agregan todos los numeros posibles en la lista y con el ultimo sale
+
+         } else {
+            listaNumeroSorteado.push(numeroGenerado);
+            return numeroGenerado;
+        }
+    }
 }
 
 function verificarIntento() {
@@ -50,45 +79,15 @@ function limpiarCaja (){
     return;
 }
 
-function generarNumeroSecreto(numMax){
-    let numeroGenerado = Math.floor(Math.random() * numMax ) + 1;
-    console.log(numeroGenerado);
-    console.log(listaNumeroSorteado);
-    //Verificar si ya sorteamos todos los numeros
-    if (listaNumeroSorteado.length == numeroMaximo){
-        asignarTextoElemento('p', 'Ya se sortearon todos los numeros posibles.');
-    } else {
-        //Si el numero generado esta incluido en la lista 
-        if (listaNumeroSorteado.includes(numeroGenerado)){
-           return generarNumeroSecreto(numMax);//la utilizacion de una funcion dentro de si misma se llama recursividad, esto lo que hace es ejecutar la misma funcion hasta cumplir una condicion especifica en este caso es repetir la generacion de numero hasta que no este en la lista, la idea de esto es reutilizar la funcion ya realizada para no limitar la necesidad
-            //en la solucion solo llamando a la funcion con recursividad se genera un bucle infinito el cual se debe arreglar
-            //se puede manejar de diferentes maneras, 1. se puede poner un numero de intentos fijo, 2. se agregan todos los numeros posibles en la lista y con el ultimo sale
-
-         } else {
-            listaNumeroSorteado.push(numeroGenerado);
-            return numeroGenerado;
-        }
-    }
-}
-
-function condicionesIniciales(){
-    asignarTextoElemento('h1', 'Juego del numero secreto!.');
-    asignarTextoElemento('p', `Indica un numero del 1 al ${numeroMaximo}.`);
-    numeroSecreto = generarNumeroSecreto(numeroMaximo);
-    intentos = 1;
-
-    return;
-}
-
 function reiniciarJuego(){
     //Limpiar caja
     limpiarCaja();
     //indicar mensaje de intervalo de numeros
     //generar numero aleatorio
     //reinicar intentos
-    condicionesIniciales();
+    condicionesIniciales(numeroMaximo);
     //deshabilitar de nuevo juego
     document.querySelector('#reiniciar').setAttribute('disabled', 'true');
     return;
 }
-condicionesIniciales();
+condicionesIniciales(numeroMaximo);
